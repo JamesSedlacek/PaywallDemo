@@ -23,6 +23,8 @@ struct PaywallView: View {
                 actionButton()
                 restorePurchasesButton()
             }
+            // To make the view 'responsive' we scale it down from an iPhone14ProMax's size
+            // Note: This is a temporary 'hack' that will not work for all device types
             .scaleEffect(CGSize(width: screenSize.width / iPhone14ProMaxScreenSize.width,
                                 height: screenSize.height / iPhone14ProMaxScreenSize.height))
             .padding(.horizontal, isIPhone14ProMax() ? 0 : -20)
