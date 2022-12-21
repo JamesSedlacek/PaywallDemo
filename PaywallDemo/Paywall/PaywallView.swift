@@ -10,84 +10,74 @@ import SwiftUI
 struct PaywallView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selectedPlan: PremiumPlan = .yearly
+    let iPhone14ProMaxScreenSize: CGSize = CGSize(width: 430.0, height: 932.0)
+    let screenSize: CGSize = UIScreen.main.bounds.size
     
     var body: some View {
         ZStack {
             Color(uiColor: .systemGroupedBackground).ignoresSafeArea()
             VStack(alignment: .center, spacing: 16) {
-                VStack {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack {
-                                Text("My Trading Journal")
-                                    .font(.system(size: 26, weight: .semibold))
-                                Spacer()
-                                xmarkButton()
-                            }
-                            Text("Premium")
-                                .font(.system(size: 40, weight: .bold))
-                        }
-                        Spacer()
-                    }
-                }.padding(20)
-                
-                VStack {
-                    InfiniteScroller(contentWidth: getContentWidth(), direction: .forward) {
-                        HStack(spacing: 16) {
-                            FeatureCardView(featureCard: .unlimitedEntries)
-                            FeatureCardView(featureCard: .importData)
-                            FeatureCardView(featureCard: .biometricsLock)
-                            FeatureCardView(featureCard: .automaticBackups)
-                        }.padding(8)
-                    }
-                    
-                    InfiniteScroller(contentWidth: getContentWidth(), direction: .backward) {
-                        HStack(spacing: 16) {
-                            FeatureCardView(featureCard: .customTags)
-                            FeatureCardView(featureCard: .moreStats)
-                            FeatureCardView(featureCard: .moreDates)
-                            FeatureCardView(featureCard: .unlimitedGoals)
-                        }.padding(8)
-                    }
-                }
-                
-                Text("Choose a plan")
-                    .foregroundColor(.secondary)
-                    .font(.system(size: 20, weight: .medium))
-                    .padding(.top)
-                MonthlyPlanView(selectedPlan: $selectedPlan).padding(.bottom, 12)
-                YearlyPlanView(selectedPlan: $selectedPlan).padding(.bottom)
+                headerSection()
+                carouselSection()
+                choosePlanSection()
                 actionButton()
                 restorePurchasesButton()
             }
-            .scaleEffect(CGSize(width: isIPhone14ProMax() ? 1 : UIScreen.main.bounds.size.width / 430.0,
-                                height: isIPhone14ProMax() ? 1 : UIScreen.main.bounds.size.height / 932.0))
+            .scaleEffect(CGSize(width: screenSize.width / iPhone14ProMaxScreenSize.width,
+                                height: screenSize.height / iPhone14ProMaxScreenSize.height))
             .padding(.horizontal, isIPhone14ProMax() ? 0 : -20)
             .animation(.spring(), value: selectedPlan)
         }
     }
     
-    private func getContentWidth() -> CGFloat {
-        let cardWidth: CGFloat = 90
-        let spacing: CGFloat = 16
-        let padding: CGFloat = 8
-        let contentWidth: CGFloat = (cardWidth * 4) + (spacing * 6) + (padding * 7)
-        return contentWidth
+    private func headerSection() -> some View {
+        return VStack {
+            HStack {
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Text("My Trading Journal")
+                            .font(.system(size: 26, weight: .semibold))
+                        Spacer()
+                        XMarkButton() { dismiss() }
+                    }
+                    Text("Premium")
+                        .font(.system(size: 40, weight: .bold))
+                }
+                Spacer()
+            }
+        }.padding(20)
     }
     
-    private func isIPhone14ProMax() -> Bool {
-        return UIScreen.main.bounds.size.width == 430.0 && UIScreen.main.bounds.size.height == 932.0
+    private func carouselSection() -> some View {
+        return VStack {
+            InfiniteScroller(contentWidth: getContentWidth(), direction: .forward) {
+                HStack(spacing: 16) {
+                    FeatureCardView(featureCard: .unlimitedEntries)
+                    FeatureCardView(featureCard: .importData)
+                    FeatureCardView(featureCard: .biometricsLock)
+                    FeatureCardView(featureCard: .automaticBackups)
+                }.padding(8)
+            }
+            
+            InfiniteScroller(contentWidth: getContentWidth(), direction: .backward) {
+                HStack(spacing: 16) {
+                    FeatureCardView(featureCard: .customTags)
+                    FeatureCardView(featureCard: .moreStats)
+                    FeatureCardView(featureCard: .moreDates)
+                    FeatureCardView(featureCard: .unlimitedGoals)
+                }.padding(8)
+            }
+        }
     }
     
-    private func xmarkButton() -> some View {
-        return Button {
-            dismiss()
-        } label: {
-            Image.xmarkCircleIcon
-                .resizable()
-                .frame(width: 24, height: 24)
-                .foregroundStyle(Color.white.opacity(0.6),
-                                 Color.secondary.opacity(0.4))
+    private func choosePlanSection() -> some View {
+        return VStack(alignment: .center, spacing: 16) {
+            Text("Choose a plan")
+                .foregroundColor(.secondary)
+                .font(.system(size: 20, weight: .medium))
+                .padding(.top)
+            MonthlyPlanView(selectedPlan: $selectedPlan).padding(.bottom, 12)
+            YearlyPlanView(selectedPlan: $selectedPlan).padding(.bottom)
         }
     }
     
@@ -113,6 +103,18 @@ struct PaywallView: View {
             Text("Restore Purchases")
                 .font(.system(size: 16, weight: .medium))
         }.padding(8)
+    }
+    
+    private func getContentWidth() -> CGFloat {
+        let cardWidth: CGFloat = 90
+        let spacing: CGFloat = 16
+        let padding: CGFloat = 8
+        let contentWidth: CGFloat = (cardWidth * 4) + (spacing * 9) + padding
+        return contentWidth
+    }
+    
+    private func isIPhone14ProMax() -> Bool {
+        return screenSize == iPhone14ProMaxScreenSize
     }
 }
 
