@@ -17,6 +17,13 @@ ScaleEffect is used to scale down the screen from an iPhone 14 Pro Max to make t
 
 ## Contributions
 Want to contribute? Open an issue & submit a pull request.
+- [ ] Parameterize the Title & Subtitle
+- [ ] Parameterize the Options section
+- [ ] Parameterize the Features Included section
+- [ ] Include boilerplate code for RevenueCat
+- [ ] Include boilerplate code for StoreKit
+- [ ] Make available through SPM
+- [ ] Make available through CocoaPods
 
 ## Author
 LinkedIn: <a href="https://www.linkedin.com/in/jamessedlacekjr/">James Sedlacek</a><br>
